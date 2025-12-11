@@ -5,7 +5,7 @@ use zela_std::{CustomProcedure, RpcError, zela_custom_procedure};
 pub struct HelloWorld;
 
 // Define input parameters for your method
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct Input {
     first_number: i32,
     second_number: i32,
@@ -25,6 +25,9 @@ impl CustomProcedure for HelloWorld {
     // Run method is the entry point of every custom procedure
     // It will be called once for each incoming request.
     async fn run(params: Self::Params) -> Result<Self::SuccessData, RpcError<Self::ErrorData>> {
+        log::info!("Hello world!");
+        log::debug!("params: {params:?}");
+
         // Dummy exception how to return an error
         if params.first_number == 0 {
             return Err(RpcError {
@@ -40,6 +43,8 @@ impl CustomProcedure for HelloWorld {
             sum: params.first_number + params.second_number,
         })
     }
+
+    const LOG_MAX_LEVEL: log::LevelFilter = log::LevelFilter::Debug;
 }
 
 // This is an essential macro-call that enables us to run a procedure
